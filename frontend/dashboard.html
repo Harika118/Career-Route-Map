@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Career Route Map | Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            Career<span>Route</span>Map
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <button
+                id="logoutButton"
+                class="nav-button"
+            >
+                Logout
+            </button>
+
+        </nav>
+
+    </header>
+
+
+    <!-- DASHBOARD -->
+
+    <main class="dashboard-page">
+
+        <section class="dashboard-header">
+
+            <span class="dashboard-label">
+                YOUR CAREER JOURNEY
+            </span>
+
+            <h1>
+                Welcome, <span id="userName">User</span> 👋
+            </h1>
+
+            <p>
+                Your personalized Career Route Map starts here.
+            </p>
+
+        </section>
+
+
+        <!-- PROFILE SUMMARY -->
+
+        <section class="dashboard-grid">
+
+            <div class="dashboard-card">
+
+                <h2>
+                    Career Profile
+                </h2>
+
+                <p>
+                    <strong>Email:</strong>
+                    <span id="userEmail">-</span>
+                </p>
+
+                <p>
+                    <strong>Education:</strong>
+                    <span id="userEducation">-</span>
+                </p>
+
+                <p>
+                    <strong>Field:</strong>
+                    <span id="userField">-</span>
+                </p>
+
+                <p>
+                    <strong>Experience:</strong>
+                    <span id="userExperience">-</span>
+                </p>
+
+            </div>
+
+
+            <div class="dashboard-card">
+
+                <h2>
+                    Career Goal
+                </h2>
+
+                <p id="careerGoal">
+                    No career goal added yet.
+                </p>
+
+            </div>
+
+
+            <div class="dashboard-card">
+
+                <h2>
+                    Skill Assessment
+                </h2>
+
+                <p>
+                    Identify your current skills and discover
+                    the skills required for your target career.
+                </p>
+
+                <button
+                    class="dashboard-action"
+                    onclick="openAssessment()"
+                >
+                    Start Assessment →
+                </button>
+
+            </div>
+
+
+            <div class="dashboard-card">
+
+                <h2>
+                    AI Career Recommendation
+                </h2>
+
+                <p>
+                    Get personalized career paths based on
+                    your profile, skills and interests.
+                </p>
+
+                <button
+                    class="dashboard-action"
+                    onclick="openRecommendation()"
+                >
+                    View Recommendations →
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-logo">
+            Career<span>Route</span>Map
+        </div>
+
+        <p>
+            AI-powered personalized career guidance platform.
+        </p>
+
+        <p class="copyright">
+            © 2026 Career Route Map. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script>
+
+        // ========================================
+        // LOAD USER
+        // ========================================
+
+        const token =
+            localStorage.getItem(
+                "careerRouteToken"
+            );
+
+        const userData =
+            localStorage.getItem(
+                "careerRouteUser"
+            );
+
+
+        // ========================================
+        // CHECK LOGIN
+        // ========================================
+
+        if (!token || !userData) {
+
+            window.location.href =
+                "login.html";
+
+        }
+
+
+        let user;
+
+        try {
+
+            user =
+                JSON.parse(userData);
+
+        } catch (error) {
+
+            localStorage.removeItem(
+                "careerRouteUser"
+            );
+
+            localStorage.removeItem(
+                "careerRouteToken"
+            );
+
+            window.location.href =
+                "login.html";
+        }
+
+
+        // ========================================
+        // DISPLAY USER
+        // ========================================
+
+        if (user) {
+
+            document.getElementById(
+                "userName"
+            ).textContent =
+                user.fullName || "User";
+
+
+            document.getElementById(
+                "userEmail"
+            ).textContent =
+                user.email || "-";
+
+
+            document.getElementById(
+                "userEducation"
+            ).textContent =
+                user.education || "-";
+
+
+            document.getElementById(
+                "userField"
+            ).textContent =
+                user.field || "-";
+
+
+            document.getElementById(
+                "userExperience"
+            ).textContent =
+                user.experience || "-";
+
+
+            document.getElementById(
+                "careerGoal"
+            ).textContent =
+                user.careerGoal ||
+                "No career goal added yet.";
+
+        }
+
+
+        // ========================================
+        // LOGOUT
+        // ========================================
+
+        document
+            .getElementById("logoutButton")
+            .addEventListener(
+                "click",
+                function () {
+
+                    localStorage.removeItem(
+                        "careerRouteToken"
+                    );
+
+                    localStorage.removeItem(
+                        "careerRouteUser"
+                    );
+
+                    window.location.href =
+                        "login.html";
+
+                }
+            );
+
+
+        // ========================================
+        // ASSESSMENT
+        // ========================================
+
+        function openAssessment() {
+
+            window.location.href =
+                "assessment.html";
+
+        }
+
+
+        // ========================================
+        // RECOMMENDATION
+        // ========================================
+
+        function openRecommendation() {
+
+            window.location.href =
+                "recommendation.html";
+
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Career Route Map | Create Profile</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            Career<span>Route</span>Map
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+        </nav>
+
+    </header>
+
+
+    <!-- REGISTER -->
+
+    <main>
+
+        <section class="register-section">
+
+            <div class="register-container">
+
+                <div class="register-header">
+
+                    <span>GET STARTED</span>
+
+                    <h1>Create Your Career Profile</h1>
+
+                    <p>
+                        Tell us about yourself so our AI can understand
+                        your background and recommend suitable career paths.
+                    </p>
+
+                </div>
+
+
+                <form id="registerForm">
+
+                    <!-- PERSONAL INFORMATION -->
+
+                    <div class="form-section">
+
+                        <h2>Personal Information</h2>
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+
+                                <label for="fullName">
+                                    Full Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="fullName"
+                                    name="fullName"
+                                    placeholder="Enter your full name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="email">
+                                    Email Address
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="Enter your email"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="password">
+                                    Password
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Create a password"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="confirmPassword">
+                                    Confirm Password
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    placeholder="Confirm your password"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EDUCATION -->
+
+                    <div class="form-section">
+
+                        <h2>Education</h2>
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+
+                                <label for="education">
+                                    Highest Education
+                                </label>
+
+                                <select id="education" name="education" required>
+
+                                    <option value="">
+                                        Select education
+                                    </option>
+
+                                    <option value="school">
+                                        School
+                                    </option>
+
+                                    <option value="diploma">
+                                        Diploma
+                                    </option>
+
+                                    <option value="bachelors">
+                                        Bachelor's Degree
+                                    </option>
+
+                                    <option value="masters">
+                                        Master's Degree
+                                    </option>
+
+                                    <option value="other">
+                                        Other
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="field">
+                                    Field of Study
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="field"
+                                    name="field"
+                                    placeholder="e.g. Computer Science"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="experience">
+                                    Experience Level
+                                </label>
+
+                                <select id="experience" name="experience" required>
+
+                                    <option value="">
+                                        Select experience
+                                    </option>
+
+                                    <option value="student">
+                                        Student
+                                    </option>
+
+                                    <option value="fresher">
+                                        Fresher
+                                    </option>
+
+                                    <option value="entry">
+                                        Entry Level
+                                    </option>
+
+                                    <option value="intermediate">
+                                        Intermediate
+                                    </option>
+
+                                    <option value="experienced">
+                                        Experienced
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="careerGoal">
+                                    Career Goal
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="careerGoal"
+                                    name="careerGoal"
+                                    placeholder="e.g. AI Engineer"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SKILLS -->
+
+                    <div class="form-section">
+
+                        <h2>Skills & Interests</h2>
+
+                        <div class="form-group">
+
+                            <label for="skills">
+                                Current Skills
+                            </label>
+
+                            <textarea
+                                id="skills"
+                                name="skills"
+                                rows="4"
+                                placeholder="Example: Python, Java, SQL, HTML, CSS"
+                                required
+                            ></textarea>
+
+                            <small>
+                                Separate multiple skills with commas.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="interests">
+                                Areas of Interest
+                            </label>
+
+                            <textarea
+                                id="interests"
+                                name="interests"
+                                rows="4"
+                                placeholder="Example: Artificial Intelligence, Data Science, Web Development"
+                                required
+                            ></textarea>
+
+                            <small>
+                                Tell us the technologies or career areas you are interested in.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- GOAL -->
+
+                    <div class="form-section">
+
+                        <h2>Career Preferences</h2>
+
+                        <div class="form-group">
+
+                            <label for="careerPreference">
+                                What type of career are you looking for?
+                            </label>
+
+                            <select
+                                id="careerPreference"
+                                name="careerPreference"
+                                required
+                            >
+
+                                <option value="">
+                                    Select preference
+                                </option>
+
+                                <option value="technical">
+                                    Technical / Software
+                                </option>
+
+                                <option value="data">
+                                    Data / Analytics
+                                </option>
+
+                                <option value="ai">
+                                    AI / Machine Learning
+                                </option>
+
+                                <option value="cybersecurity">
+                                    Cybersecurity
+                                </option>
+
+                                <option value="cloud">
+                                    Cloud / DevOps
+                                </option>
+
+                                <option value="design">
+                                    UI/UX / Design
+                                </option>
+
+                                <option value="business">
+                                    Business / Management
+                                </option>
+
+                                <option value="explore">
+                                    I am not sure yet
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TERMS -->
+
+                    <div class="terms">
+
+                        <label>
+
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                required
+                            >
+
+                            I agree to provide this information for
+                            personalized career recommendations.
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="register-button"
+                    >
+                        Create My Career Profile →
+                    </button>
+
+
+                    <p class="login-link">
+
+                        Already have an account?
+
+                        <a href="login.html">
+                            Login here
+                        </a>
+
+                    </p>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-logo">
+            Career<span>Route</span>Map
+        </div>
+
+        <p>
+            AI-powered personalized career guidance platform.
+        </p>
+
+        <p class="copyright">
+            © 2026 Career Route Map. All rights reserved.
+        </p>
+
+    </footer>
+
+   <script>
+console.log("REGISTER SCRIPT LOADED");
+
+document.getElementById("registerForm").addEventListener("submit", async function (event) {
+
+    event.preventDefault();
+
+    const form = event.target;
+
+    const data = {
+        fullName: form.elements["fullName"].value.trim(),
+        email: form.elements["email"].value.trim(),
+        password: form.elements["password"].value,
+        confirmPassword: form.elements["confirmPassword"].value,
+        education: form.elements["education"].value,
+        field: form.elements["field"].value.trim(),
+        experience: form.elements["experience"].value,
+        careerGoal: form.elements["careerGoal"].value.trim(),
+        skills: form.elements["skills"].value.trim(),
+        interests: form.elements["interests"].value.trim(),
+        careerPreference: form.elements["careerPreference"].value
+    };
+
+    if (data.password !== data.confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+    }
+
+    try {
+
+        console.log("Sending registration data...");
+
+        const response = await fetch("http://localhost:5000/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        console.log("Backend response:", result);
+
+        if (!response.ok) {
+            alert(result.message || "Registration failed.");
+            return;
+        }
+
+        alert("Profile created successfully!");
+
+        window.location.href = "login.html";
+
+    } catch (error) {
+
+        console.error("REGISTRATION ERROR:", error);
+
+        alert("REASON: " + error.message);
+    }
+
+});
+</script>
+</body>
+
+</html>

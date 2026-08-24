@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Career Route Map | AI Recommendations</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        Career<span>Route</span>Map
+    </div>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+
+        <button id="logoutButton" class="nav-button">
+            Logout
+        </button>
+    </nav>
+
+</header>
+
+
+<main class="recommendation-page">
+
+    <section class="recommendation-header">
+
+        <span>AI CAREER RECOMMENDATION</span>
+
+        <h1>Your Personalized Career Paths</h1>
+
+        <p>
+            Our AI analyzed your education, skills, interests,
+            strengths, goals and assessment responses.
+        </p>
+
+    </section>
+
+
+    <div id="loading" class="recommendation-loading">
+
+        <div class="loader"></div>
+
+        <h2>Preparing your career paths...</h2>
+
+        <p>
+            Please wait while we analyze your profile.
+        </p>
+
+    </div>
+
+
+    <section
+        id="recommendationsContainer"
+        class="recommendations-grid"
+    ></section>
+
+
+    <div
+        id="noRecommendations"
+        class="no-recommendations"
+        style="display:none;"
+    >
+
+        <h2>No recommendations available</h2>
+
+        <p>
+            Please complete the assessment again.
+        </p>
+
+        <button
+            class="login-button"
+            onclick="goToAssessment()"
+        >
+            Take Assessment
+        </button>
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    <div class="footer-logo">
+        Career<span>Route</span>Map
+    </div>
+
+    <p>
+        AI-powered personalized career guidance platform.
+    </p>
+
+    <p class="copyright">
+        © 2026 Career Route Map. All rights reserved.
+    </p>
+
+</footer>
+
+
+<script>
+
+// ========================================
+// AUTHENTICATION
+// ========================================
+
+const token =
+    localStorage.getItem(
+        "careerRouteToken"
+    );
+
+const userData =
+    localStorage.getItem(
+        "careerRouteUser"
+    );
+
+
+if (!token || !userData) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+// ========================================
+// LOAD AI RESULT
+// ========================================
+
+const storedRecommendations =
+    localStorage.getItem(
+        "careerRecommendations"
+    );
+
+
+const loading =
+    document.getElementById(
+        "loading"
+    );
+
+const container =
+    document.getElementById(
+        "recommendationsContainer"
+    );
+
+const noRecommendations =
+    document.getElementById(
+        "noRecommendations"
+    );
+
+
+// ========================================
+// DISPLAY RECOMMENDATIONS
+// ========================================
+
+function displayRecommendations(data) {
+
+    loading.style.display =
+        "none";
+
+
+    if (
+        !data ||
+        !data.careerPaths ||
+        !Array.isArray(
+            data.careerPaths
+        ) ||
+        data.careerPaths.length === 0
+    ) {
+
+        noRecommendations.style.display =
+            "block";
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    data.careerPaths.forEach(
+        (career, index) => {
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+            card.className =
+                "career-recommendation-card";
+
+
+            const skills =
+                Array.isArray(
+                    career.requiredSkills
+                )
+                    ? career.requiredSkills
+                    : [];
+
+
+            const gaps =
+                Array.isArray(
+                    career.missingSkills
+                )
+                    ? career.missingSkills
+                    : [];
+
+
+            const learningPlan =
+                Array.isArray(
+                    career.learningPlan
+                )
+                    ? career.learningPlan
+                    : [];
+
+
+            const projects =
+                Array.isArray(
+                    career.projects
+                )
+                    ? career.projects
+                    : [];
+
+
+            const jobRoles =
+                Array.isArray(
+                    career.jobRoles
+                )
+                    ? career.jobRoles
+                    : [];
+
+
+            const roadmap =
+                Array.isArray(
+                    career.roadmap
+                )
+                    ? career.roadmap
+                    : [];
+
+
+            card.innerHTML = `
+
+                <div class="career-card-top">
+
+                    <span class="career-rank">
+                        #${index + 1}
+                    </span>
+
+                    <span class="match-score">
+                        ${career.matchPercentage || 0}% Match
+                    </span>
+
+                </div>
+
+
+                <h2>
+                    ${escapeHTML(
+                        career.title ||
+                        "Career Path"
+                    )}
+                </h2>
+
+
+                <p class="career-reason">
+
+                    ${escapeHTML(
+                        career.reason ||
+                        "This career matches your profile."
+                    )}
+
+                </p>
+
+
+                <div class="career-section">
+
+                    <h3>
+                        Required Skills
+                    </h3>
+
+                    <div class="tag-container">
+
+                        ${
+                            skills.length
+                                ? skills
+                                    .map(
+                                        skill =>
+                                            `<span class="skill-tag">
+                                                ${escapeHTML(skill)}
+                                            </span>`
+                                    )
+                                    .join("")
+                                : "<span>No skills listed</span>"
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="career-section">
+
+                    <h3>
+                        Your Skill Gaps
+                    </h3>
+
+                    <div class="tag-container">
+
+                        ${
+                            gaps.length
+                                ? gaps
+                                    .map(
+                                        gap =>
+                                            `<span class="gap-tag">
+                                                ${escapeHTML(gap)}
+                                            </span>`
+                                    )
+                                    .join("")
+                                : "<span>No major skill gaps identified</span>"
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="career-section">
+
+                    <h3>
+                        Learning Plan
+                    </h3>
+
+                    <ul>
+
+                        ${
+                            learningPlan.length
+                                ? learningPlan
+                                    .map(
+                                        item =>
+                                            `<li>
+                                                ${escapeHTML(item)}
+                                            </li>`
+                                    )
+                                    .join("")
+                                : "<li>Learning plan unavailable</li>"
+                        }
+
+                    </ul>
+
+                </div>
+
+
+                <div class="career-section">
+
+                    <h3>
+                        Roadmap
+                    </h3>
+
+                    <ol>
+
+                        ${
+                            roadmap.length
+                                ? roadmap
+                                    .map(
+                                        item =>
+                                            `<li>
+                                                ${escapeHTML(item)}
+                                            </li>`
+                                    )
+                                    .join("")
+                                : "<li>Roadmap unavailable</li>"
+                        }
+
+                    </ol>
+
+                </div>
+
+
+                <div class="career-section">
+
+                    <h3>
+                        Recommended Projects
+                    </h3>
+
+                    <ul>
+
+                        ${
+                            projects.length
+                                ? projects
+                                    .map(
+                                        item =>
+                                            `<li>
+                                                ${escapeHTML(item)}
+                                            </li>`
+                                    )
+                                    .join("")
+                                : "<li>No projects listed</li>"
+                        }
+
+                    </ul>
+
+                </div>
+
+
+                <div class="career-section">
+
+                    <h3>
+                        Suitable Job Roles
+                    </h3>
+
+                    <div class="tag-container">
+
+                        ${
+                            jobRoles.length
+                                ? jobRoles
+                                    .map(
+                                        role =>
+                                            `<span class="role-tag">
+                                                ${escapeHTML(role)}
+                                            </span>`
+                                    )
+                                    .join("")
+                                : "<span>No roles listed</span>"
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="career-growth">
+
+                    <strong>
+                        Growth Potential
+                    </strong>
+
+                    <p>
+                        ${escapeHTML(
+                            career.growthPotential ||
+                            "Not available."
+                        )}
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="career-roadmap-button"
+                    onclick="openRoadmap(${index})"
+                >
+                    Explore This Career →
+                </button>
+
+            `;
+
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+// ========================================
+// SAFE HTML
+// ========================================
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// ========================================
+// ROADMAP
+// ========================================
+
+function openRoadmap(index) {
+
+    const data =
+        JSON.parse(
+            storedRecommendations
+        );
+
+
+    const selectedCareer =
+        data.careerPaths[index];
+
+
+    localStorage.setItem(
+        "selectedCareerPath",
+        JSON.stringify(
+            selectedCareer
+        )
+    );
+
+
+    window.location.href =
+        "roadmap.html";
+
+}
+
+
+// ========================================
+// ASSESSMENT
+// ========================================
+
+function goToAssessment() {
+
+    window.location.href =
+        "assessment.html";
+
+}
+
+
+// ========================================
+// LOGOUT
+// ========================================
+
+document
+    .getElementById(
+        "logoutButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            localStorage.removeItem(
+                "careerRouteToken"
+            );
+
+            localStorage.removeItem(
+                "careerRouteUser"
+            );
+
+            localStorage.removeItem(
+                "careerAssessment"
+            );
+
+            localStorage.removeItem(
+                "careerRecommendations"
+            );
+
+            window.location.href =
+                "login.html";
+
+        }
+    );
+
+
+// ========================================
+// INITIALIZE
+// ========================================
+
+if (storedRecommendations) {
+
+    try {
+
+        const data =
+            JSON.parse(
+                storedRecommendations
+            );
+
+        displayRecommendations(
+            data
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Recommendation parsing error:",
+            error
+        );
+
+        loading.style.display =
+            "none";
+
+        noRecommendations.style.display =
+            "block";
+
+    }
+
+}
+
+else {
+
+    loading.style.display =
+        "none";
+
+    noRecommendations.style.display =
+        "block";
+
+}
+
+</script>
+
+</body>
+
+</html>

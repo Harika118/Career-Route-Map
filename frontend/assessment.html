@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Career Route Map | AI Assessment
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+    <div class="logo">
+
+        Career<span>Route</span>Map
+
+    </div>
+
+
+    <nav>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <button
+            id="logoutButton"
+            class="nav-button"
+        >
+            Logout
+        </button>
+
+    </nav>
+
+</header>
+
+
+
+<main class="assessment-page">
+
+
+    <!-- ================================= -->
+    <!-- LOADING -->
+    <!-- ================================= -->
+
+    <section
+        id="loadingSection"
+        class="assessment-header"
+    >
+
+        <span>
+            AI CAREER ASSESSMENT
+        </span>
+
+        <h1>
+            Creating Your Personalized Assessment
+        </h1>
+
+        <p>
+            Our AI is analyzing your education,
+            branch, skills and interests to create
+            questions specifically for you.
+        </p>
+
+        <p>
+            Please wait...
+        </p>
+
+    </section>
+
+
+
+    <!-- ================================= -->
+    <!-- ASSESSMENT -->
+    <!-- ================================= -->
+
+    <section
+        id="assessmentSection"
+        style="display:none;"
+    >
+
+        <div class="assessment-header">
+
+            <span>
+                PERSONALIZED AI ASSESSMENT
+            </span>
+
+            <h1 id="assessmentTitle">
+                Career Assessment
+            </h1>
+
+            <p id="assessmentInstructions">
+            </p>
+
+        </div>
+
+
+        <form id="assessmentForm">
+
+            <div id="questionsContainer">
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+                id="submitButton"
+            >
+
+                Analyze My Career with AI →
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+
+    <!-- ================================= -->
+    <!-- ERROR -->
+    <!-- ================================= -->
+
+    <section
+        id="errorSection"
+        style="display:none;"
+        class="assessment-header"
+    >
+
+        <h1>
+            Unable to Create Assessment
+        </h1>
+
+        <p id="errorMessage">
+        </p>
+
+        <button
+            class="login-button"
+            onclick="location.reload()"
+        >
+
+            Try Again
+
+        </button>
+
+    </section>
+
+
+</main>
+
+
+
+<footer>
+
+    <div class="footer-logo">
+
+        Career<span>Route</span>Map
+
+    </div>
+
+    <p>
+        AI-powered personalized career guidance platform.
+    </p>
+
+    <p class="copyright">
+        © 2026 Career Route Map.
+        All rights reserved.
+    </p>
+
+</footer>
+
+
+
+<script>
+
+
+// ========================================
+// AUTHENTICATION
+// ========================================
+
+const token =
+    localStorage.getItem(
+        "careerRouteToken"
+    );
+
+
+const userData =
+    localStorage.getItem(
+        "careerRouteUser"
+    );
+
+
+if (
+    !token ||
+    !userData
+) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+let user;
+
+
+try {
+
+    user =
+        JSON.parse(
+            userData
+        );
+
+}
+
+catch (error) {
+
+    localStorage.clear();
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+// ========================================
+// ELEMENTS
+// ========================================
+
+const loadingSection =
+    document.getElementById(
+        "loadingSection"
+    );
+
+
+const assessmentSection =
+    document.getElementById(
+        "assessmentSection"
+    );
+
+
+const errorSection =
+    document.getElementById(
+        "errorSection"
+    );
+
+
+const errorMessage =
+    document.getElementById(
+        "errorMessage"
+    );
+
+
+const questionsContainer =
+    document.getElementById(
+        "questionsContainer"
+    );
+
+
+const assessmentForm =
+    document.getElementById(
+        "assessmentForm"
+    );
+
+
+
+// ========================================
+// GENERATE AI ASSESSMENT
+// ========================================
+
+async function generateAssessment() {
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:5000/api/ai/generate-assessment",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${token}`
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            education:
+                                user.education,
+
+                            field:
+                                user.field,
+
+                            experience:
+                                user.experience,
+
+                            careerGoal:
+                                user.careerGoal,
+
+                            skills:
+                                user.skills,
+
+                            interests:
+                                user.interests,
+
+                            careerPreference:
+                                user.careerPreference
+
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        console.log(
+            "AI Assessment:",
+            result
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.message ||
+                "Failed to generate assessment."
+            );
+
+        }
+
+
+        if (
+            !result.assessment ||
+            !Array.isArray(
+                result.assessment.questions
+            )
+        ) {
+
+            throw new Error(
+                "AI returned an invalid assessment."
+            );
+
+        }
+
+
+        localStorage.setItem(
+            "generatedAssessment",
+            JSON.stringify(
+                result.assessment
+            )
+        );
+
+
+        displayAssessment(
+            result.assessment
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "ASSESSMENT ERROR:",
+            error
+        );
+
+
+        loadingSection.style.display =
+            "none";
+
+
+        errorSection.style.display =
+            "block";
+
+
+        errorMessage.textContent =
+            error.message;
+
+    }
+
+}
+
+
+
+// ========================================
+// DISPLAY QUESTIONS
+// ========================================
+
+function displayAssessment(
+    assessment
+) {
+
+    loadingSection.style.display =
+        "none";
+
+
+    assessmentSection.style.display =
+        "block";
+
+
+    document.getElementById(
+        "assessmentTitle"
+    ).textContent =
+        assessment.assessmentTitle ||
+        "Your Personalized Assessment";
+
+
+    document.getElementById(
+        "assessmentInstructions"
+    ).textContent =
+        assessment.instructions ||
+        "Answer all questions honestly.";
+
+
+    questionsContainer.innerHTML =
+        "";
+
+
+    assessment.questions.forEach(
+        function(question, index) {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "assessment-card";
+
+
+            const title =
+                document.createElement(
+                    "h2"
+                );
+
+
+            title.textContent =
+                `${index + 1}. ${question.question}`;
+
+
+            card.appendChild(
+                title
+            );
+
+
+            const type =
+                question.type;
+
+
+            const options =
+                Array.isArray(
+                    question.options
+                )
+                    ? question.options
+                    : [];
+
+
+            // ==============================
+            // RATING
+            // ==============================
+
+            if (
+                type === "rating"
+            ) {
+
+                const wrapper =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                wrapper.className =
+                    "rating-options";
+
+
+                for (
+                    let i = 1;
+                    i <= 5;
+                    i++
+                ) {
+
+                    const label =
+                        document.createElement(
+                            "label"
+                        );
+
+
+                    label.innerHTML = `
+
+                        <input
+                            type="radio"
+                            name="question_${question.id}"
+                            value="${i}"
+                            required
+                        >
+
+                        ${i}
+
+                    `;
+
+
+                    wrapper.appendChild(
+                        label
+                    );
+
+                }
+
+
+                card.appendChild(
+                    wrapper
+                );
+
+            }
+
+
+            // ==============================
+            // SINGLE CHOICE
+            // ==============================
+
+            else if (
+                type === "single_choice"
+            ) {
+
+                options.forEach(
+                    function(option) {
+
+                        const label =
+                            document.createElement(
+                                "label"
+                            );
+
+
+                        label.innerHTML = `
+
+                            <input
+                                type="radio"
+                                name="question_${question.id}"
+                                value="${escapeHTML(option)}"
+                                required
+                            >
+
+                            ${escapeHTML(option)}
+
+                        `;
+
+
+                        card.appendChild(
+                            label
+                        );
+
+                    }
+                );
+
+            }
+
+
+            // ==============================
+            // MULTIPLE CHOICE
+            // ==============================
+
+            else if (
+                type === "multiple_choice"
+            ) {
+
+                options.forEach(
+                    function(option) {
+
+                        const label =
+                            document.createElement(
+                                "label"
+                            );
+
+
+                        label.innerHTML = `
+
+                            <input
+                                type="checkbox"
+                                name="question_${question.id}"
+                                value="${escapeHTML(option)}"
+                            >
+
+                            ${escapeHTML(option)}
+
+                        `;
+
+
+                        card.appendChild(
+                            label
+                        );
+
+                    }
+                );
+
+            }
+
+
+            questionsContainer.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+
+// ========================================
+// COLLECT ANSWERS
+// ========================================
+
+function collectAnswers() {
+
+    const assessment =
+        JSON.parse(
+            localStorage.getItem(
+                "generatedAssessment"
+            )
+        );
+
+
+    const answers = {};
+
+
+    assessment.questions.forEach(
+        function(question) {
+
+            const inputs =
+                document.querySelectorAll(
+                    `[name="question_${question.id}"]`
+                );
+
+
+            if (
+                question.type ===
+                "multiple_choice"
+            ) {
+
+                answers[
+                    question.id
+                ] =
+                    Array.from(
+                        inputs
+                    )
+                    .filter(
+                        input =>
+                            input.checked
+                    )
+                    .map(
+                        input =>
+                            input.value
+                    );
+
+            }
+
+            else {
+
+                const selected =
+                    Array.from(
+                        inputs
+                    )
+                    .find(
+                        input =>
+                            input.checked
+                    );
+
+
+                answers[
+                    question.id
+                ] =
+                    selected
+                        ? selected.value
+                        : "";
+
+            }
+
+        }
+    );
+
+
+    return answers;
+
+}
+
+
+
+// ========================================
+// SUBMIT
+// ========================================
+
+assessmentForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const answers =
+            collectAnswers();
+
+
+        localStorage.setItem(
+            "assessmentAnswers",
+            JSON.stringify(
+                answers
+            )
+        );
+
+
+        const assessment =
+            JSON.parse(
+                localStorage.getItem(
+                    "generatedAssessment"
+                )
+            );
+
+
+        const submitButton =
+            document.getElementById(
+                "submitButton"
+            );
+
+
+        submitButton.disabled =
+            true;
+
+
+        submitButton.textContent =
+            "AI is analyzing your answers...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "http://localhost:5000/api/ai/recommendations",
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                `Bearer ${token}`
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                education:
+                                    user.education,
+
+                                field:
+                                    user.field,
+
+                                experience:
+                                    user.experience,
+
+                                careerGoal:
+                                    user.careerGoal,
+
+                                skills:
+                                    user.skills,
+
+                                interests:
+                                    user.interests,
+
+                                careerPreference:
+                                    user.careerPreference,
+
+                                assessment:
+                                    assessment,
+
+                                answers:
+                                    answers
+
+                            })
+
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "AI Career Recommendations:",
+                result
+            );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to generate recommendations."
+                );
+
+            }
+
+
+            localStorage.setItem(
+                "careerRecommendations",
+                JSON.stringify(
+                    result.recommendations
+                )
+            );
+
+
+            window.location.href =
+                "recommendation.html";
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "RECOMMENDATION ERROR:",
+                error
+            );
+
+
+            alert(
+                "Unable to generate career paths.\n\n" +
+                error.message
+            );
+
+
+            submitButton.disabled =
+                false;
+
+
+            submitButton.textContent =
+                "Analyze My Career with AI →";
+
+        }
+
+    }
+);
+
+
+
+// ========================================
+// LOGOUT
+// ========================================
+
+document
+    .getElementById(
+        "logoutButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            localStorage.removeItem(
+                "careerRouteToken"
+            );
+
+            localStorage.removeItem(
+                "careerRouteUser"
+            );
+
+            localStorage.removeItem(
+                "generatedAssessment"
+            );
+
+            localStorage.removeItem(
+                "assessmentAnswers"
+            );
+
+            localStorage.removeItem(
+                "careerRecommendations"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+        }
+    );
+
+
+
+// ========================================
+// HTML ESCAPE
+// ========================================
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+// ========================================
+// START
+// ========================================
+
+generateAssessment();
+
+</script>
+
+</body>
+
+</html>
