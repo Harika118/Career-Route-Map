@@ -1,0 +1,182 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Career Route Map | My Roadmap</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/roadmap.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        Career<span>Route</span>Map
+    </div>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+
+        <button id="logoutButton" class="nav-button">
+            Logout
+        </button>
+    </nav>
+
+</header>
+
+
+<main class="roadmap-page">
+
+    <!-- HERO -->
+
+    <section class="quest-hero">
+
+        <div class="hero-content">
+
+            <div class="quest-label">
+                YOUR PERSONAL CAREER ROADMAP
+            </div>
+
+            <h1>
+                Become a
+                <span id="careerTitle">Software Engineer</span>
+            </h1>
+
+            <p id="careerDescription" class="hero-description">
+                Your personalized learning journey based on your skills,
+                interests and career goals.
+            </p>
+
+        </div>
+
+
+        <div class="player-panel">
+
+            <div class="player-row">
+                <span>XP</span>
+                <strong id="xpValue">0</strong>
+            </div>
+
+            <div class="player-row">
+                <span>LEVEL</span>
+                <strong id="playerLevel">1</strong>
+            </div>
+
+            <div class="player-row">
+                <span>STREAK</span>
+                <strong>
+                    <span id="streak">1</span> days
+                </strong>
+            </div>
+
+            <div class="xp-bar">
+                <div id="xpFill" class="xp-fill"></div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PROGRESS -->
+
+    <section class="quest-progress">
+
+        <div class="progress-top">
+
+            <span>CAREER PROGRESS</span>
+
+            <strong>
+                <span id="progressPercentage">0</span>%
+            </strong>
+
+        </div>
+
+        <div class="main-progress">
+
+            <div
+                id="progressFill"
+                class="main-progress-fill">
+            </div>
+
+        </div>
+
+        <div class="task-summary">
+
+            <span id="completedTasks">0</span>
+            /
+            <span id="totalTasks">0</span>
+            tasks completed
+
+        </div>
+
+    </section>
+
+
+    <!-- JOURNEY -->
+
+    <section>
+
+        <div class="journey-header">
+
+            <span>CAREER ROADMAP</span>
+
+            <h2>Your Learning Journey</h2>
+
+            <p>
+                Complete each stage to gradually build the skills
+                required for your target career.
+            </p>
+
+        </div>
+
+
+        <div id="roadmapTasks">
+
+            <div class="roadmap-loading">
+
+                <div class="loading-spinner"></div>
+
+                <span>
+                    Loading your roadmap...
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<footer>
+
+    <div class="footer-logo">
+        Career<span>Route</span>Map
+    </div>
+
+    <p>
+        AI-powered personalized career guidance platform.
+    </p>
+
+    <p class="copyright">
+        © 2026 Career Route Map. All rights reserved.
+    </p>
+
+</footer>
+
+<div id="message"></div>
+
+<script src="js/roadmap.js"></script>
+
+</body>
+
+</html>

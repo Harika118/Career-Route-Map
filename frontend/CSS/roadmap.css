@@ -1,0 +1,1035 @@
+/* =========================================================
+   CAREER ROUTE MAP - ROADMAP PAGE
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f5f7fb;
+    color: #172033;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.navbar {
+    width: 100%;
+    min-height: 70px;
+    padding: 0 6%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 800;
+    color: #172033;
+}
+
+.logo span {
+    color: #4f46e5;
+}
+
+.navbar nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar nav a {
+    color: #374151;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.navbar nav a:hover {
+    color: #4f46e5;
+}
+
+.nav-button {
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+
+    background: #4f46e5;
+    color: #ffffff;
+
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background: #4338ca;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.roadmap-page {
+    width: min(1180px, calc(100% - 40px));
+    margin: 40px auto 70px;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.quest-hero {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 30px;
+
+    padding: 45px;
+
+    border-radius: 22px;
+
+    background: linear-gradient(
+        135deg,
+        #111827,
+        #1e293b
+    );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 20px 45px rgba(15, 23, 42, 0.15);
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.quest-label {
+    margin-bottom: 12px;
+
+    color: #818cf8;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 1.8px;
+
+    text-transform: uppercase;
+}
+
+.quest-hero h1 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.1;
+}
+
+.quest-hero h1 span {
+    color: #a5b4fc;
+}
+
+.hero-description {
+    max-width: 700px;
+
+    margin: 18px 0 0;
+
+    color: #cbd5e1 !important;
+
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   PLAYER PANEL
+   ========================================================= */
+
+.player-panel {
+    padding: 25px;
+
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    backdrop-filter: blur(10px);
+}
+
+.player-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-row:last-of-type {
+    border-bottom: none;
+}
+
+.player-row span {
+    color: #cbd5e1;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+.player-row strong {
+    color: #ffffff;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   XP BAR
+   ========================================================= */
+
+.xp-bar {
+    width: 100%;
+    height: 8px;
+
+    margin-top: 18px;
+
+    overflow: hidden;
+
+    border-radius: 50px;
+
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.xp-fill {
+    width: 0%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: #818cf8;
+
+    transition: width 0.4s ease;
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.quest-progress {
+    margin-top: 25px;
+    padding: 25px 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 8px 25px rgba(15, 23, 42, 0.05);
+}
+
+.progress-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+}
+
+.progress-top span {
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+}
+
+.progress-top strong {
+    color: #4f46e5;
+
+    font-size: 20px;
+}
+
+.main-progress {
+    width: 100%;
+    height: 10px;
+
+    overflow: hidden;
+
+    border-radius: 50px;
+
+    background: #e5e7eb;
+}
+
+.main-progress-fill {
+    width: 0%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: #4f46e5;
+
+    transition: width 0.5s ease;
+}
+
+.task-summary {
+    margin-top: 12px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   JOURNEY HEADER
+   ========================================================= */
+
+.journey-header {
+    margin: 55px 0 25px;
+}
+
+.journey-header > span {
+    color: #4f46e5;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+.journey-header h2 {
+    margin: 8px 0;
+
+    color: #111827;
+
+    font-size: 32px;
+}
+
+.journey-header p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.roadmap-loading {
+    min-height: 250px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 15px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    color: #64748b;
+}
+
+.loading-spinner {
+    width: 38px;
+    height: 38px;
+
+    border: 4px solid #e5e7eb;
+
+    border-top-color: #4f46e5;
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   LEVEL CARD
+   ========================================================= */
+
+.level-card {
+    display: flex;
+
+    gap: 22px;
+
+    padding: 28px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(15, 23, 42, 0.05);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.level-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 35px rgba(15, 23, 42, 0.08);
+}
+
+.level-card.locked {
+    opacity: 0.65;
+}
+
+.level-card.active {
+    border-color: #c7d2fe;
+}
+
+.level-number {
+    min-width: 45px;
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #eef2ff;
+
+    color: #4f46e5;
+
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.level-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 14px;
+
+    background: #f1f5f9;
+
+    font-size: 23px;
+}
+
+.level-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.level-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.level-heading h3 {
+    margin: 5px 0 7px;
+
+    color: #111827;
+
+    font-size: 22px;
+}
+
+.level-heading p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+.level-status {
+    height: fit-content;
+
+    padding: 7px 12px;
+
+    border-radius: 50px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+
+    white-space: nowrap;
+}
+
+.status-open {
+    background: #eef2ff;
+
+    color: #4f46e5;
+}
+
+.status-locked {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   TASKS
+   ========================================================= */
+
+.level-tasks {
+    margin-top: 22px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.quest-task {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.quest-task:hover {
+    background: #ffffff;
+
+    border-color: #c7d2fe;
+}
+
+.quest-task.completed {
+    background: #f0fdf4;
+
+    border-color: #bbf7d0;
+}
+
+.quest-task input {
+    width: 18px;
+    height: 18px;
+
+    flex-shrink: 0;
+
+    accent-color: #4f46e5;
+
+    cursor: pointer;
+}
+
+.quest-task input:disabled {
+    cursor: not-allowed;
+}
+
+.quest-icon {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    font-size: 17px;
+}
+
+.task-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.quest-title {
+    color: #1e293b;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+.quest-task.completed .quest-title {
+    color: #64748b;
+
+    text-decoration: line-through;
+}
+
+.task-description {
+    margin-top: 4px;
+
+    color: #64748b !important;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+.quest-xp {
+    color: #4f46e5;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CONNECTOR
+   ========================================================= */
+
+.level-path {
+    width: 2px;
+    height: 35px;
+
+    margin: 0 auto;
+
+    background: #cbd5e1;
+}
+
+.level-path.completed {
+    background: #818cf8;
+}
+
+
+/* =========================================================
+   FINAL DESTINATION
+   ========================================================= */
+
+.final-destination {
+    margin-top: 35px;
+
+    padding: 35px;
+
+    text-align: center;
+
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    border: 2px solid #e5e7eb;
+
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+.final-destination.unlocked {
+    border-color: #a5b4fc;
+
+    background: #f8faff;
+}
+
+.final-icon {
+    margin-bottom: 12px;
+
+    font-size: 38px;
+}
+
+.final-destination .quest-label {
+    margin-bottom: 5px;
+}
+
+.final-destination h2 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 30px;
+}
+
+.final-destination p {
+    max-width: 600px;
+
+    margin: 10px auto 20px;
+
+    color: #64748b;
+
+    line-height: 1.6;
+}
+
+.final-skills {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.final-skills span {
+    padding: 8px 13px;
+
+    border-radius: 50px;
+
+    background: #eef2ff;
+
+    color: #4f46e5;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   ERROR / EMPTY
+   ========================================================= */
+
+.roadmap-message {
+    padding: 50px 25px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+}
+
+.error-icon,
+.empty-icon {
+    margin-bottom: 12px;
+
+    font-size: 40px;
+}
+
+.roadmap-message h3 {
+    margin: 0 0 8px;
+
+    color: #111827;
+
+    font-size: 22px;
+}
+
+.roadmap-message p {
+    max-width: 550px;
+
+    margin: 0 auto 20px;
+
+    color: #64748b;
+
+    line-height: 1.6;
+}
+
+.retry-button {
+    display: inline-block;
+
+    padding: 11px 20px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #4f46e5;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.retry-button:hover {
+    background: #4338ca;
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+#message {
+    position: fixed;
+
+    left: 50%;
+    bottom: 25px;
+
+    z-index: 9999;
+
+    padding: 13px 22px;
+
+    border-radius: 10px;
+
+    background: #111827;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transform: translate(-50%, 20px);
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+#message.show {
+    opacity: 1;
+
+    transform: translate(-50%, 0);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+    padding: 45px 20px;
+
+    text-align: center;
+
+    background: #111827;
+
+    color: #cbd5e1;
+}
+
+.footer-logo {
+    margin-bottom: 10px;
+
+    color: #ffffff;
+
+    font-size: 20px;
+
+    font-weight: 800;
+}
+
+.footer-logo span {
+    color: #818cf8;
+}
+
+footer p {
+    margin: 7px 0;
+
+    color: #94a3b8;
+}
+
+footer .copyright {
+    margin-top: 15px;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .quest-hero {
+        grid-template-columns: 1fr;
+
+        padding: 32px;
+    }
+
+    .player-panel {
+        max-width: 100%;
+    }
+
+    .level-heading {
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .level-status {
+        width: fit-content;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .navbar {
+        min-height: 65px;
+
+        padding: 0 20px;
+    }
+
+    .navbar nav {
+        gap: 10px;
+    }
+
+    .navbar nav a {
+        display: none;
+    }
+
+    .logo {
+        font-size: 19px;
+    }
+
+    .nav-button {
+        padding: 9px 13px;
+
+        font-size: 12px;
+    }
+
+    .roadmap-page {
+        width: calc(100% - 24px);
+
+        margin-top: 20px;
+    }
+
+    .quest-hero {
+        padding: 25px 20px;
+
+        border-radius: 17px;
+    }
+
+    .quest-hero h1 {
+        font-size: 31px;
+    }
+
+    .hero-description {
+        font-size: 14px;
+    }
+
+    .quest-progress {
+        padding: 20px;
+    }
+
+    .journey-header {
+        margin-top: 35px;
+    }
+
+    .journey-header h2 {
+        font-size: 26px;
+    }
+
+    .level-card {
+        padding: 18px;
+
+        gap: 10px;
+
+        flex-wrap: wrap;
+    }
+
+    .level-number {
+        min-width: 38px;
+
+        height: 38px;
+    }
+
+    .level-icon {
+        width: 38px;
+
+        height: 38px;
+
+        font-size: 18px;
+    }
+
+    .level-content {
+        width: 100%;
+
+        flex-basis: 100%;
+    }
+
+    .level-heading h3 {
+        font-size: 19px;
+    }
+
+    .quest-task {
+        align-items: flex-start;
+
+        padding: 13px;
+    }
+
+    .quest-xp {
+        display: none;
+    }
+
+    .final-destination {
+        padding: 28px 18px;
+    }
+
+    .final-destination h2 {
+        font-size: 26px;
+    }
+
+}

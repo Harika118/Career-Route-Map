@@ -506,32 +506,103 @@ function escapeHTML(value) {
 // ROADMAP
 // ========================================
 
-function openRoadmap(index) {
+async function openRoadmap(index) {
 
     const data =
         JSON.parse(
             storedRecommendations
         );
 
-
     const selectedCareer =
         data.careerPaths[index];
 
 
-    localStorage.setItem(
-        "selectedCareerPath",
-        JSON.stringify(
-            selectedCareer
-        )
-    );
+    if (!selectedCareer) {
+
+        alert("Career information not found.");
+        return;
+
+    }
 
 
-    window.location.href =
-        "roadmap.html";
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:5000/api/career/select",
+                {
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            "Bearer " + token
+
+                    },
+
+                    body: JSON.stringify({
+
+                        career:
+                            selectedCareer
+
+                    })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        console.log(
+            "Career selection response:",
+            result
+        );
+
+
+        if (!response.ok) {
+
+            alert(
+                result.message ||
+                "Unable to create career roadmap."
+            );
+
+            return;
+
+        }
+
+
+        localStorage.setItem(
+            "selectedCareerPath",
+            JSON.stringify(
+                selectedCareer
+            )
+        );
+
+
+        window.location.href =
+            "roadmap.html";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Career selection error:",
+            error
+        );
+
+        alert(
+            "Unable to connect to the Career Route Map server."
+        );
+
+    }
 
 }
-
-
 // ========================================
 // ASSESSMENT
 // ========================================
@@ -624,7 +695,6 @@ else {
         "block";
 
 }
-
 </script>
 
 </body>

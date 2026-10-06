@@ -2,12 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenAI } = require("@google/genai");
 const path = require("path");
 
 const db = require("./database/database");
 
-require("dotenv").config();
+require("dotenv").config({ override: true });
 
 const app = express();
 
@@ -16,21 +16,26 @@ const PORT = process.env.PORT || 5000;
 const JWT_SECRET =
     process.env.JWT_SECRET || "career_route_map_secret_2026";
 
-
-// ========================================
+// =====================================================
 // GEMINI AI
-// ========================================
+// =====================================================
 
-const genAI = new GoogleGenerativeAI(
+console.log(
+    "GEMINI SERVER KEY:",
     process.env.GEMINI_API_KEY
+        ? process.env.GEMINI_API_KEY.slice(0, 6) + "..." + process.env.GEMINI_API_KEY.slice(-4)
+        : "MISSING",
+    "LENGTH:",
+    process.env.GEMINI_API_KEY?.length
 );
 
-const geminiModel = genAI.getGenerativeModel({
-    model: "gemini-3.6-flash"
+const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY
 });
-// ========================================
+
+// =====================================================
 // MIDDLEWARE
-// ========================================
+// =====================================================
 
 app.use(cors());
 
@@ -40,10 +45,9 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-
-// ========================================
+// =====================================================
 // FRONTEND
-// ========================================
+// =====================================================
 
 app.use(
     "/frontend",
@@ -52,10 +56,9 @@ app.use(
     )
 );
 
-
-// ========================================
+// =====================================================
 // HOME
-// ========================================
+// =====================================================
 
 app.get("/", (req, res) => {
 
@@ -66,10 +69,9 @@ app.get("/", (req, res) => {
 
 });
 
-
-// ========================================
+// =====================================================
 // REGISTER
-// ========================================
+// =====================================================
 
 app.post("/api/auth/register", async (req, res) => {
 
@@ -87,7 +89,6 @@ app.post("/api/auth/register", async (req, res) => {
             interests,
             careerPreference
         } = req.body;
-
 
         if (
             !fullName ||
@@ -108,13 +109,11 @@ app.post("/api/auth/register", async (req, res) => {
 
         }
 
-
         const existingUser = db
             .prepare(
                 "SELECT id FROM users WHERE email = ?"
             )
             .get(email);
-
 
         if (existingUser) {
 
@@ -126,10 +125,8 @@ app.post("/api/auth/register", async (req, res) => {
 
         }
 
-
         const hashedPassword =
             await bcrypt.hash(password, 10);
-
 
         const insertUser = db.prepare(`
 
@@ -150,7 +147,6 @@ app.post("/api/auth/register", async (req, res) => {
 
         `);
 
-
         const result = insertUser.run(
             fullName,
             email,
@@ -163,7 +159,6 @@ app.post("/api/auth/register", async (req, res) => {
             interests,
             careerPreference
         );
-
 
         return res.status(201).json({
 
@@ -198,10 +193,9 @@ app.post("/api/auth/register", async (req, res) => {
 
 });
 
-
-// ========================================
+// =====================================================
 // LOGIN
-// ========================================
+// =====================================================
 
 app.post("/api/auth/login", async (req, res) => {
 
@@ -211,7 +205,6 @@ app.post("/api/auth/login", async (req, res) => {
             email,
             password
         } = req.body;
-
 
         if (!email || !password) {
 
@@ -226,7 +219,6 @@ app.post("/api/auth/login", async (req, res) => {
 
         }
 
-
         const user = db
             .prepare(`
                 SELECT *
@@ -234,7 +226,6 @@ app.post("/api/auth/login", async (req, res) => {
                 WHERE email = ?
             `)
             .get(email);
-
 
         if (!user) {
 
@@ -249,13 +240,11 @@ app.post("/api/auth/login", async (req, res) => {
 
         }
 
-
         const passwordMatch =
             await bcrypt.compare(
                 password,
                 user.password
             );
-
 
         if (!passwordMatch) {
 
@@ -269,7 +258,6 @@ app.post("/api/auth/login", async (req, res) => {
             });
 
         }
-
 
         const token = jwt.sign(
 
@@ -285,7 +273,6 @@ app.post("/api/auth/login", async (req, res) => {
             }
 
         );
-
 
         return res.status(200).json({
 
@@ -353,7 +340,6 @@ app.post("/api/auth/login", async (req, res) => {
 
 });
 
-
 // =====================================================
 // AI — GENERATE PERSONALIZED ASSESSMENT
 // =====================================================
@@ -374,7 +360,6 @@ app.post(
                 careerPreference
             } = req.body;
 
-
             if (
                 !education ||
                 !field ||
@@ -392,7 +377,6 @@ app.post(
                 });
 
             }
-
 
             const prompt = `
 
@@ -423,7 +407,6 @@ ${careerGoal || "Not specified"}
 Career Preference:
 ${careerPreference || "Not specified"}
 
-
 IMPORTANT:
 
 This must NOT be a generic assessment.
@@ -448,13 +431,11 @@ Cover:
 - Learning preferences
 - Career direction
 
-
 Use these question types:
 
 single_choice
 multiple_choice
 rating
-
 
 For rating questions use a 1-5 scale.
 
@@ -483,15 +464,14 @@ The questions array MUST contain exactly 15 questions.
 
 `;
 
+            const result = await ai.models.generateContent({
+                model: "gemini-3.1-flash-lite",
+                contents: prompt
+            });
 
-const result = await geminiModel.generateContent(prompt);
-
-const aiText =
-    result.response.text();
-
+            const aiText = result.text;
 
             let assessment;
-
 
             try {
 
@@ -517,7 +497,6 @@ const aiText =
                 });
 
             }
-
 
             return res.status(200).json({
 
@@ -550,7 +529,6 @@ const aiText =
     }
 );
 
-
 // =====================================================
 // AI — GENERATE CAREER RECOMMENDATIONS
 // =====================================================
@@ -573,7 +551,6 @@ app.post(
                 answers
             } = req.body;
 
-
             if (
                 !education ||
                 !field ||
@@ -591,7 +568,6 @@ app.post(
                 });
 
             }
-
 
             const prompt = `
 
@@ -627,23 +603,21 @@ ${JSON.stringify(assessment || {})}
 STUDENT ANSWERS:
 ${JSON.stringify(answers || {})}
 
-
 Generate EXACTLY 4 career paths.
 
 Rank them from highest suitability to lowest suitability.
 
 The recommendation must consider:
 
-Education
-Branch
-Skills
-Interests
-Assessment answers
-Strengths
-Career goal
-Experience
-Career preference
-
+- Education
+- Branch
+- Skills
+- Interests
+- Assessment answers
+- Strengths
+- Career goal
+- Experience
+- Career preference
 
 Do NOT simply recommend popular careers.
 
@@ -662,7 +636,6 @@ For every career provide:
 - Projects
 - Job roles
 - Growth potential
-
 
 Return ONLY valid JSON.
 
@@ -687,15 +660,14 @@ Use exactly:
 
 `;
 
+            const result = await ai.models.generateContent({
+                model: "gemini-3.1-flash-lite",
+                contents: prompt
+            });
 
-const result = await geminiModel.generateContent(prompt);
-
-const aiText =
-    result.response.text();
-
+            const aiText = result.text;
 
             let recommendations;
-
 
             try {
 
@@ -721,7 +693,6 @@ const aiText =
                 });
 
             }
-
 
             return res.status(200).json({
 
@@ -754,28 +725,532 @@ const aiText =
     }
 );
 
+// ================= ADVANCED ROADMAP SYSTEM =================
 
-// ========================================
-// 404
-// ========================================
+function authenticateToken(req, res, next) {
 
-app.use((req, res) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
 
-    res.status(404).json({
+    if (!token) {
+        return res.status(401).json({
+            success: false,
+            message: "Authentication token required"
+        });
+    }
 
-        success: false,
+    jwt.verify(token, JWT_SECRET, (err, user) => {
 
-        message:
-            "API route not found."
+        if (err) {
+            return res.status(403).json({
+                success: false,
+                message: "Invalid or expired token"
+            });
+        }
 
+        req.user = user;
+        next();
     });
+}
 
+// Create advanced product tables
+db.exec(`
+CREATE TABLE IF NOT EXISTS career_selections (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL UNIQUE,
+    career_title TEXT NOT NULL,
+    match_percentage REAL DEFAULT 0,
+    recommendation_json TEXT,
+    selected_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS roadmap_tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    phase TEXT,
+    task_title TEXT NOT NULL,
+    task_description TEXT,
+    priority TEXT DEFAULT 'medium',
+    completed INTEGER DEFAULT 0,
+    completed_at TEXT
+);
+
+CREATE TABLE IF NOT EXISTS user_progress (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL UNIQUE,
+    total_tasks INTEGER DEFAULT 0,
+    completed_tasks INTEGER DEFAULT 0,
+    progress_percentage REAL DEFAULT 0,
+    readiness_score REAL DEFAULT 0,
+    last_activity TEXT
+);
+`);
+
+function updateProgress(userId) {
+
+    const result = db.prepare(`
+        SELECT
+            COUNT(*) AS total,
+            COALESCE(
+                SUM(
+                    CASE
+                        WHEN completed = 1 THEN 1
+                        ELSE 0
+                    END
+                ),
+                0
+            ) AS completed
+        FROM roadmap_tasks
+        WHERE user_id = ?
+    `).get(userId);
+
+    const total = Number(result.total || 0);
+    const completed = Number(result.completed || 0);
+
+    const progressPercentage =
+        total > 0
+            ? Math.round((completed / total) * 100)
+            : 0;
+
+    const career = db.prepare(`
+        SELECT match_percentage
+        FROM career_selections
+        WHERE user_id = ?
+    `).get(userId);
+
+    const matchPercentage =
+        Number(career?.match_percentage || 0);
+
+    const readinessScore = Math.round(
+        (progressPercentage * 0.75) +
+        (matchPercentage * 0.25)
+    );
+
+    /*
+       Only update stored progress when necessary.
+       This keeps roadmap loading lightweight.
+    */
+
+    db.prepare(`
+        INSERT INTO user_progress
+        (
+            user_id,
+            total_tasks,
+            completed_tasks,
+            progress_percentage,
+            readiness_score,
+            last_activity
+        )
+        VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+
+        ON CONFLICT(user_id)
+        DO UPDATE SET
+
+            total_tasks = excluded.total_tasks,
+
+            completed_tasks = excluded.completed_tasks,
+
+            progress_percentage =
+                excluded.progress_percentage,
+
+            readiness_score =
+                excluded.readiness_score
+    `).run(
+        userId,
+        total,
+        completed,
+        progressPercentage,
+        readinessScore
+    );
+
+    return {
+        totalTasks: total,
+        completedTasks: completed,
+        progressPercentage,
+        readinessScore
+    };
+}
+
+function getProgress(userId) {
+
+    const result = db.prepare(`
+        SELECT
+            COUNT(*) AS total,
+            COALESCE(
+                SUM(
+                    CASE
+                        WHEN completed = 1 THEN 1
+                        ELSE 0
+                    END
+                ),
+                0
+            ) AS completed
+        FROM roadmap_tasks
+        WHERE user_id = ?
+    `).get(userId);
+
+    const totalTasks = Number(result.total || 0);
+    const completedTasks = Number(result.completed || 0);
+
+    const progressPercentage =
+        totalTasks > 0
+            ? Math.round(
+                (completedTasks / totalTasks) * 100
+            )
+            : 0;
+
+    const career = db.prepare(`
+        SELECT match_percentage
+        FROM career_selections
+        WHERE user_id = ?
+    `).get(userId);
+
+    const matchPercentage =
+        Number(career?.match_percentage || 0);
+
+    const readinessScore = Math.round(
+        (progressPercentage * 0.75) +
+        (matchPercentage * 0.25)
+    );
+
+    return {
+        totalTasks,
+        completedTasks,
+        progressPercentage,
+        readinessScore
+    };
+}
+
+// SELECT CAREER
+app.post("/api/career/select", authenticateToken, (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const career = req.body.career;
+
+        if (!career) {
+            return res.status(400).json({
+                success: false,
+                message: "Career data required"
+            });
+        }
+
+        const title =
+            career.title ||
+            career.careerTitle ||
+            career.name ||
+            "Selected Career";
+
+        const match = Number(
+            career.matchPercentage ||
+            career.match_percentage ||
+            career.match ||
+            0
+        );
+
+        db.prepare(`
+            INSERT INTO career_selections
+            (user_id,career_title,match_percentage,recommendation_json)
+            VALUES (?,?,?,?)
+            ON CONFLICT(user_id)
+            DO UPDATE SET
+            career_title=excluded.career_title,
+            match_percentage=excluded.match_percentage,
+            recommendation_json=excluded.recommendation_json,
+            selected_at=CURRENT_TIMESTAMP
+        `).run(
+            userId,
+            title,
+            match,
+            JSON.stringify(career)
+        );
+
+        // Reset old roadmap
+        db.prepare(`
+            DELETE FROM roadmap_tasks
+            WHERE user_id = ?
+        `).run(userId);
+
+// =====================================================
+// CONVERT AI ROADMAP INTO CLEAN LEARNING TASKS
+// =====================================================
+
+let roadmap =
+    Array.isArray(career.roadmap)
+        ? career.roadmap
+        : Array.isArray(career.learningPlan)
+            ? career.learningPlan
+            : [];
+
+// Keep only meaningful roadmap items
+roadmap = roadmap
+    .map(item => {
+
+        if (typeof item === "string") {
+
+            return {
+                title: cleanRoadmapText(item),
+                description:
+                    "Complete this learning milestone."
+            };
+        }
+
+        if (item && typeof item === "object") {
+
+            return {
+                title: cleanRoadmapText(
+                    item.title ||
+                    item.task ||
+                    item.name ||
+                    ""
+                ),
+
+                description: cleanRoadmapText(
+                    item.description ||
+                    item.details ||
+                    ""
+                )
+            };
+        }
+
+        return null;
+    })
+    .filter(item =>
+        item &&
+        item.title &&
+        item.title.length > 2
+    );
+
+        const insertTask = db.prepare(`
+            INSERT INTO roadmap_tasks
+            (user_id,phase,task_title,task_description,priority)
+            VALUES (?,?,?,?,?)
+        `);
+
+        const progress = updateProgress(userId);
+
+        res.json({
+            success: true,
+            message: "Career roadmap created successfully",
+            career: {
+                title,
+                matchPercentage: match
+            },
+            progress
+        });
+
+    } catch (error) {
+        console.error("Career selection error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to create roadmap"
+        });
+    }
 });
 
 
-// ========================================
+// GET ROADMAP
+app.get("/api/roadmap", authenticateToken, (req, res) => {
+    try {
+
+        const userId = req.user.userId;
+
+        const career = db.prepare(`
+            SELECT *
+            FROM career_selections
+            WHERE user_id = ?
+        `).get(userId);
+
+        if (!career) {
+            return res.json({
+                success: true,
+                selected: false,
+                tasks: [],
+                career: null,
+                progress: getProgress(userId)
+            });
+        }
+
+        const tasks = db.prepare(`
+            SELECT
+            id,
+            phase,
+            task_title AS title,
+            task_description AS description,
+            priority,
+            completed,
+            completed_at AS completedAt
+            FROM roadmap_tasks
+            WHERE user_id = ?
+            ORDER BY id
+        `).all(userId);
+
+        res.json({
+            success: true,
+            selected: true,
+
+            career: {
+                title: career.career_title,
+                matchPercentage: career.match_percentage,
+                recommendation: JSON.parse(
+                    career.recommendation_json || "{}"
+                )
+            },
+
+            tasks: tasks.map(task => ({
+                ...task,
+                completed: Boolean(task.completed)
+            })),
+
+            progress: updateProgress(userId)
+        });
+
+    } catch (error) {
+
+        console.error("Roadmap error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to load roadmap"
+        });
+    }
+});
+
+
+// UPDATE TASK PROGRESS
+app.post("/api/progress/update", authenticateToken, (req, res) => {
+
+    try {
+
+        const userId = req.user.userId;
+        const taskId = Number(req.body.taskId);
+        const completed = Boolean(req.body.completed);
+
+        const task = db.prepare(`
+            SELECT id
+            FROM roadmap_tasks
+            WHERE id = ? AND user_id = ?
+        `).get(taskId, userId);
+
+        if (!task) {
+            return res.status(404).json({
+                success: false,
+                message: "Task not found"
+            });
+        }
+
+        db.prepare(`
+            UPDATE roadmap_tasks
+            SET completed = ?,
+                completed_at = ?
+            WHERE id = ? AND user_id = ?
+        `).run(
+            completed ? 1 : 0,
+            completed ? new Date().toISOString() : null,
+            taskId,
+            userId
+        );
+
+        const progress = updateProgress(userId);
+
+        res.json({
+            success: true,
+            message: completed
+                ? "Task completed"
+                : "Task marked incomplete",
+            progress
+        });
+
+    } catch (error) {
+
+        console.error("Progress error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Progress update failed"
+        });
+    }
+});
+
+
+// ADVANCED DASHBOARD API
+app.get("/api/dashboard", authenticateToken, (req, res) => {
+
+    try {
+
+        const userId = req.user.userId;
+
+        const user = db.prepare(`
+           SELECT id,full_name,email
+            FROM users
+            WHERE id = ?
+        `).get(userId);
+
+        const career = db.prepare(`
+            SELECT *
+            FROM career_selections
+            WHERE user_id = ?
+        `).get(userId);
+
+        const progress = updateProgress(userId);
+
+        const recentActivity = db.prepare(`
+            SELECT
+            phase,
+            task_title AS title,
+            completed,
+            completed_at AS completedAt
+            FROM roadmap_tasks
+            WHERE user_id = ?
+            AND completed = 1
+            ORDER BY completed_at DESC
+            LIMIT 5
+        `).all(userId);
+
+        res.json({
+
+            success: true,
+
+            user,
+
+            career: career ? {
+                title: career.career_title,
+                matchPercentage: career.match_percentage
+            } : null,
+
+            progress,
+
+            recentActivity
+        });
+
+    } catch (error) {
+
+        console.error("Dashboard error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Dashboard failed"
+        });
+    }
+});
+
+console.log("Advanced Career Route Map system ready.");
+
+
+// =====================================================
+// 404 - MUST BE LAST
+// =====================================================
+
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: "API route not found."
+    });
+});
+
+// =====================================================
 // START SERVER
-// ========================================
+// =====================================================
 
 app.listen(
     PORT,
